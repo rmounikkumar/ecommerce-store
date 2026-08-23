@@ -250,6 +250,25 @@
   background: var(--color-primary-soft);
 }
 
+/* Theme toggle */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius);
+  transition: color var(--transition), background var(--transition);
+}
+
+.theme-toggle:hover {
+  color: var(--color-primary-hover);
+  background: var(--color-primary-soft);
+}
+
 /* Cart */
 .cart-button {
   position: relative;
