@@ -48,13 +48,19 @@ export function OrdersProvider({ children }) {
     return data.order;
   }, []);
 
+  const cancelOrder = useCallback(async (orderId) => {
+    const data = await api(`/orders/${orderId}/cancel`, { method: 'POST' });
+    setOrders(prev => prev.map(order => (order.id === orderId ? data.order : order)));
+    return data.order;
+  }, []);
+
   const getOrder = useCallback(
     orderId => orders.find(order => order.id === orderId),
     [orders]
   );
 
   return (
-    <OrdersContext.Provider value={{ orders, loading, addOrder, updateOrderStatus, verifyOrderPayment, getOrder }}>
+    <OrdersContext.Provider value={{ orders, loading, addOrder, updateOrderStatus, cancelOrder, verifyOrderPayment, getOrder }}>
       {children}
     </OrdersContext.Provider>
   );

@@ -6,7 +6,8 @@ import {
   getOrder,
   listAllOrders,
   updateOrderStatus,
-  verifyOrderPayment
+  verifyOrderPayment,
+  cancelOrder
 } from '../controllers/orderController.js';
 import { requireAuth, requireAdmin } from '../middleware/auth.js';
 
@@ -33,6 +34,7 @@ router.post('/:id/verify-payment', requireAuth, verifyOrderPayment);
 router.get('/mine', requireAuth, listMyOrders);
 router.get('/all', requireAuth, requireAdmin, listAllOrders);
 router.get('/:id', requireAuth, getOrder);
+router.post('/:id/cancel', requireAuth, cancelOrder);
 router.patch('/:id/status', requireAuth, requireAdmin, updateOrderStatus);
 
 export default router;

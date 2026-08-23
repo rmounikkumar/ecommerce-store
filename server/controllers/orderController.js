@@ -10,6 +10,15 @@ function generateOrderNumber() {
 }
 
 const VALID_STATUSES = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const CANCELLABLE_STATUSES = ['Pending', 'Processing'];
+
+async function restockOrderItems(order) {
+  await Product.bulkWrite(
+    order.items.map(item => ({
+      updateOne: { filter: { _id: item.product }, update: { $inc: { stock: item.quantity } } }
+    }))
+  );
+}
 
 export async function createOrder(req, res, next) {
   try {
@@ -194,19 +203,47 @@ export async function listAllOrders(req, res, next) {
   }
 }
 
+export async function cancelOrder(req, res, next) {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+    if (req.user.role !== 'admin' && (!order.user || order.user.toString() !== req.user._id.toString())) {
+      return res.status(403).json({ error: 'You do not have access to this order.' });
+    }
+    if (!CANCELLABLE_STATUSES.includes(order.status)) {
+      return res.status(400).json({
+        error: order.status === 'Cancelled'
+          ? 'This order is already cancelled.'
+          : `Orders that are ${order.status.toLowerCase()} can no longer be cancelled.`
+      });
+    }
+    order.status = 'Cancelled';
+    await order.save();
+    await restockOrderItems(order);
+    res.json({ order: order.toSafeJSON() });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function updateOrderStatus(req, res, next) {
   try {
     const { status } = req.body || {};
     if (!VALID_STATUSES.includes(status)) {
       return res.status(400).json({ error: 'Invalid order status.' });
     }
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { $set: { status } },
-      { new: true, runValidators: true }
-    );
+    const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ error: 'Order not found.' });
+    }
+    if (order.status !== status) {
+      order.status = status;
+      await order.save();
+      if (status === 'Cancelled') {
+        await restockOrderItems(order);
+      }
     }
     res.json({ order: order.toSafeJSON() });
   } catch (err) {

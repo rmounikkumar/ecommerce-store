@@ -6,6 +6,8 @@ import { formatCurrency } from '../utils/format';
 import { OrderTimeline } from '../components/OrderTimeline';
 import './OrderHistory.css';
 
+const CANCELLABLE_STATUSES = ['Pending', 'Processing'];
+
 function formatDate(isoDate) {
   return new Date(isoDate).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -15,10 +17,22 @@ function formatDate(isoDate) {
 }
 
 export function OrderHistory() {
-  const { orders } = useOrders();
+  const { orders, cancelOrder } = useOrders();
   const { user } = useAuth();
 
   const userOrders = orders;
+
+  const handleCancelOrder = async (order) => {
+    const confirmed = window.confirm(
+      `Cancel order #${order.orderNumber}?\n\nThe items will be returned to stock and this cannot be undone.`
+    );
+    if (!confirmed) return;
+    try {
+      await cancelOrder(order.id);
+    } catch (err) {
+      window.alert(err.message || 'Could not cancel the order. Please try again.');
+    }
+  };
 
   return (
     <section className="order-history">
@@ -96,9 +110,20 @@ export function OrderHistory() {
                       <strong>Total</strong>
                       <strong>{formatCurrency(order.total)}</strong>
                     </div>
-                    <Link to={`/order/${order.id}`} className="order-view-btn">
-                      View Order
-                    </Link>
+                    <div className="order-actions">
+                      {CANCELLABLE_STATUSES.includes(order.status) && (
+                        <button
+                          type="button"
+                          className="order-cancel-btn"
+                          onClick={() => handleCancelOrder(order)}
+                        >
+                          Cancel Order
+                        </button>
+                      )}
+                      <Link to={`/order/${order.id}`} className="order-view-btn">
+                        View Order
+                      </Link>
+                    </div>
                   </div>
                 </article>
               ))}
