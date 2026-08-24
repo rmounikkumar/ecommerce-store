@@ -318,14 +318,14 @@
 }
 
 .pd-btn-buy-now {
-  background: var(--gradient-blue);
-  color: #FFFFFF;
-  box-shadow: 0 4px 20px var(--glow-blue);
+  background: #FFD814;
+  color: #212121;
+  box-shadow: 0 4px 20px rgba(255, 216, 20, 0.28);
 }
 
 .pd-btn-buy-now:hover {
-  filter: brightness(1.15);
-  box-shadow: 0 6px 28px var(--glow-blue);
+  background: #F5CE0D;
+  box-shadow: 0 6px 28px rgba(255, 216, 20, 0.38);
 }
 
 .pd-btn-add-cart {
