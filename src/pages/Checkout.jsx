@@ -25,6 +25,7 @@ export function Checkout() {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('online');
 
   const buyNowProduct = location.state?.buyNowProduct;
   const isBuyNow = !!buyNowProduct;
@@ -78,7 +79,8 @@ export function Checkout() {
           address: formData.address,
           city: formData.city,
           zip: formData.zip
-        }
+        },
+        paymentMethod
       });
       if (!isBuyNow) {
         clearCart();
@@ -233,17 +235,68 @@ export function Checkout() {
 
           <div className="form-section">
             <h2>Payment</h2>
+            <div className="payment-options">
+              <label className={`payment-option ${paymentMethod === 'online' ? 'is-selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="online"
+                  checked={paymentMethod === 'online'}
+                  onChange={() => setPaymentMethod('online')}
+                  disabled={isSubmitting}
+                />
+                <span className="payment-option-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                </span>
+                <span className="payment-option-text">
+                  <span className="payment-option-title">Pay Online</span>
+                  <span className="payment-option-desc">UPI, Cards &amp; NetBanking via Razorpay</span>
+                </span>
+              </label>
+              <label className={`payment-option ${paymentMethod === 'cod' ? 'is-selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={paymentMethod === 'cod'}
+                  onChange={() => setPaymentMethod('cod')}
+                  disabled={isSubmitting}
+                />
+                <span className="payment-option-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="12" cy="12" r="2.5" />
+                    <path d="M6 12h.01M18 12h.01" />
+                  </svg>
+                </span>
+                <span className="payment-option-text">
+                  <span className="payment-option-title">Cash on Delivery</span>
+                  <span className="payment-option-desc">Pay in cash when your order arrives</span>
+                </span>
+              </label>
+            </div>
             <div className="payment-note">
-              <p>
-                You'll pay securely through <strong>Razorpay</strong> using UPI, cards, or
-                netbanking after placing your order.
-              </p>
+              {paymentMethod === 'cod' ? (
+                <p>Please keep the exact amount ready for our delivery partner.</p>
+              ) : (
+                <p>
+                  You'll pay securely through <strong>Razorpay</strong> using UPI, cards, or
+                  netbanking after placing your order.
+                </p>
+              )}
             </div>
           </div>
 
           {errors.submit && <p className="checkout-submit-error">{errors.submit}</p>}
           <button type="submit" className="place-order-btn" disabled={isSubmitting}>
-            {isSubmitting ? 'Processing...' : `Pay ${formatCurrency(total)}`}
+            {isSubmitting
+              ? 'Processing...'
+              : paymentMethod === 'cod'
+                ? `Place Order - ${formatCurrency(total)}`
+                : `Pay ${formatCurrency(total)}`}
           </button>
         </form>
 

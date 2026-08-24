@@ -101,6 +101,7 @@ export function OrderConfirmation() {
 
   const paid = Boolean(order.payment?.paid);
   const paymentEnabled = Boolean(order.payment?.enabled);
+  const isCod = order.payment?.method === 'cod';
 
   return (
     <>
@@ -117,16 +118,18 @@ export function OrderConfirmation() {
           <p className="confirmation-message">
             {paid
               ? 'Thank you for your purchase! Your payment was successful and a confirmation has been sent to your email address.'
-              : paymentEnabled
-                ? 'Your order is placed but your payment is still pending. Complete the payment below to start processing.'
-                : 'Thank you for your purchase! A confirmation email has been sent to your email address.'}
+              : isCod
+                ? `Thank you for your order! Please keep ${formatCurrency(order.total)} ready in cash — you pay when your order arrives.`
+                : paymentEnabled
+                  ? 'Your order is placed but your payment is still pending. Complete the payment below to start processing.'
+                  : 'Thank you for your purchase! A confirmation email has been sent to your email address.'}
           </p>
 
           <div className="order-summary-box">
             <div className="order-summary-head">
               <h3>Order Summary</h3>
-              <span className={`status-badge ${paid ? 'status-delivered' : 'status-pending'}`}>
-                {paid ? 'Paid' : 'Payment Pending'}
+              <span className={`status-badge ${paid ? 'status-delivered' : isCod ? 'status-processing' : 'status-pending'}`}>
+                {paid ? 'Paid' : isCod ? 'Cash on Delivery' : 'Payment Pending'}
               </span>
             </div>
             <ul className="order-summary-items">
@@ -167,6 +170,12 @@ export function OrderConfirmation() {
                 <>
                   <li>We'll prepare your order for shipment</li>
                   <li>You'll receive tracking info via email</li>
+                  <li>Expected delivery: 3-5 business days</li>
+                </>
+              ) : isCod ? (
+                <>
+                  <li>We'll start preparing your order right away</li>
+                  <li>Keep the cash ready for the delivery partner</li>
                   <li>Expected delivery: 3-5 business days</li>
                 </>
               ) : (

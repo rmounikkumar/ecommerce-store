@@ -311,3 +311,8 @@
     text-align: center;
   }
 }
+
+.status-processing {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}

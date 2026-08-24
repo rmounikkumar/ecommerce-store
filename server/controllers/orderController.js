@@ -87,8 +87,11 @@ export async function createOrder(req, res, next) {
     const orderNumber = generateOrderNumber();
     const amount = Math.round(total * 100);
 
+    const requestedMethod = body.paymentMethod === 'cod' ? 'cod' : 'online';
+    const payByRazorpay = requestedMethod === 'online' && razorpayEnabled;
+
     let razorpayOrderId = '';
-    if (razorpayEnabled) {
+    if (payByRazorpay) {
       const rzpOrder = await razorpay.orders.create({
         amount,
         currency: env.CURRENCY,
@@ -98,19 +101,21 @@ export async function createOrder(req, res, next) {
       razorpayOrderId = rzpOrder.id;
     }
 
-    const order = await Order.create({
-      user: req.user ? req.user._id : null,
-      orderNumber,
-      items,
-      subtotal,
-      shipping,
-      total,
-      status: razorpayEnabled ? 'Pending' : 'Processing',
-      shippingInfo,
-      payment: razorpayEnabled
-        ? { method: 'razorpay', razorpayOrderId, paid: false }
-        : undefined
-    });
+   const order = await Order.create({
+     user: req.user ? req.user._id : null,
+     orderNumber,
+     items,
+     subtotal,
+     shipping,
+     total,
+     status: payByRazorpay ? 'Pending' : 'Processing',
+     shippingInfo,
+     payment: payByRazorpay
+       ? { method: 'razorpay', razorpayOrderId, paid: false }
+       : requestedMethod === 'cod'
+         ? { method: 'cod', paid: false }
+         : undefined
+   });
 
     if (brevoConfigured()) {
       sendOrderConfirmationEmail(order).catch(err => {
