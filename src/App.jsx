@@ -35,14 +35,7 @@ function App() {
                 {layout.showBottomNav && <BottomNav />}
                 <main>
                   <Routes>
-                    <Route
-                      path="/"
-                      element={
-                        <RequireAuth>
-                          <Home />
-                        </RequireAuth>
-                      }
-                    />
+                    <Route path="/" element={<Home />} />
                     <Route
                       path="/products"
                       element={
@@ -51,14 +44,7 @@ function App() {
                         </RequireAuth>
                       }
                     />
-                    <Route
-                      path="/product/:id"
-                      element={
-                        <RequireAuth>
-                          <ProductDetail />
-                        </RequireAuth>
-                      }
-                    />
+                    <Route path="/product/:id" element={<ProductDetail />} />
                     <Route
                       path="/cart"
                       element={
