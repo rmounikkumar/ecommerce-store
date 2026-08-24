@@ -102,34 +102,49 @@ export function OrderConfirmation() {
   const paid = Boolean(order.payment?.paid);
   const paymentEnabled = Boolean(order.payment?.enabled);
   const isCod = order.payment?.method === 'cod';
+  const isCancelled = order.status === 'Cancelled';
 
   return (
     <>
-      <Confetti />
+      {!isCancelled && <Confetti />}
       <section className="order-confirmation">
         <div className="container">
           <div className="confirmation-card">
           <div className="success-icon">
-            <span className="success-emoji" role="img" aria-label="Order placed">✅</span>
+            <span className="success-emoji" role="img" aria-label={isCancelled ? 'Order cancelled' : 'Order placed'}>
+              {isCancelled ? '🚫' : '✅'}
+            </span>
           </div>
-          <h1>{paid ? 'Order Confirmed!' : paymentEnabled ? 'Order Placed!' : 'Order Confirmed!'}</h1>
+          <h1>
+            {isCancelled
+              ? 'Order Cancelled'
+              : paid
+                ? 'Order Confirmed!'
+                : paymentEnabled
+                  ? 'Order Placed!'
+                  : 'Order Confirmed!'}
+          </h1>
           <p className="order-id">Order ID: <strong>#{order.orderNumber}</strong></p>
           <p className="order-placed">Placed on {formatDate(order.date)}</p>
           <p className="confirmation-message">
-            {paid
-              ? 'Thank you for your purchase! Your payment was successful and a confirmation has been sent to your email address.'
-              : isCod
-                ? `Thank you for your order! Please keep ${formatCurrency(order.total)} ready in cash — you pay when your order arrives.`
-                : paymentEnabled
-                  ? 'Your order is placed but your payment is still pending. Complete the payment below to start processing.'
-                  : 'Thank you for your purchase! A confirmation email has been sent to your email address.'}
+            {isCancelled
+              ? paid
+                ? `This order was cancelled. Your payment of ${formatCurrency(order.total)} will be refunded to your original payment method within 5-7 business days.`
+                : 'This order was cancelled and the items have been returned to stock. No charges were made.'
+              : paid
+                ? 'Thank you for your purchase! Your payment was successful and a confirmation has been sent to your email address.'
+                : isCod
+                  ? `Thank you for your order! Please keep ${formatCurrency(order.total)} ready in cash — you pay when your order arrives.`
+                  : paymentEnabled
+                    ? 'Your order is placed but your payment is still pending. Complete the payment below to start processing.'
+                    : 'Thank you for your purchase! A confirmation email has been sent to your email address.'}
           </p>
 
           <div className="order-summary-box">
             <div className="order-summary-head">
               <h3>Order Summary</h3>
-              <span className={`status-badge ${paid ? 'status-delivered' : isCod ? 'status-processing' : 'status-pending'}`}>
-                {paid ? 'Paid' : isCod ? 'Cash on Delivery' : 'Payment Pending'}
+              <span className={`status-badge ${isCancelled ? 'status-cancelled' : paid ? 'status-delivered' : isCod ? 'status-processing' : 'status-pending'}`}>
+                {isCancelled ? 'Cancelled' : paid ? 'Paid' : isCod ? 'Cash on Delivery' : 'Payment Pending'}
               </span>
             </div>
             <ul className="order-summary-items">
@@ -153,7 +168,7 @@ export function OrderConfirmation() {
 
           <OrderTimeline status={order.status} />
 
-          {paymentEnabled && !paid && (
+          {paymentEnabled && !paid && !isCancelled && (
             <div className="order-pay-box">
               {payError && <p className="checkout-submit-error">{payError}</p>}
               <button className="btn-pay-now" onClick={handlePayNow} disabled={paying}>
@@ -166,7 +181,17 @@ export function OrderConfirmation() {
           <div className="order-details">
             <h3>What happens next?</h3>
             <ul>
-              {paid ? (
+              {isCancelled ? (
+                <>
+                  <li>The items have been returned to stock</li>
+                  {paid ? (
+                    <li>Your refund will be processed within 5-7 business days</li>
+                  ) : (
+                    <li>No payment was collected for this order</li>
+                  )}
+                  <li>You can place a new order anytime</li>
+                </>
+              ) : paid ? (
                 <>
                   <li>We'll prepare your order for shipment</li>
                   <li>You'll receive tracking info via email</li>

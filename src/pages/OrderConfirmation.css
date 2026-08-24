@@ -316,3 +316,8 @@
   background: var(--color-accent-soft);
   color: var(--color-accent-hover);
 }
+
+.status-cancelled {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
