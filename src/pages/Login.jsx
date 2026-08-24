@@ -1,18 +1,20 @@
 import { useState } from 'react';
-import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { adminUrl } from '../config/site';
 import './auth.css';
 
 export function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from && location.state.from !== '/login' ? location.state.from : '/';
   const { user, login, logout } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleChange = (e) => {
@@ -35,7 +37,7 @@ export function Login() {
         }
         return;
       }
-      navigate('/', { replace: true });
+      navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {

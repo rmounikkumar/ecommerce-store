@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { validateEmail, validateName, passwordChecks } from '../utils/validation';
 import './auth.css';
@@ -14,6 +14,8 @@ const passwordRules = [
 
 export function Register() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from && location.state.from !== '/register' ? location.state.from : '/';
   const { user, register } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
@@ -25,7 +27,7 @@ export function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleChange = (e) => {
@@ -63,7 +65,7 @@ export function Register() {
         email: formData.email.trim().toLowerCase(),
         password: formData.password
       });
-      navigate('/', { replace: true });
+      navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {

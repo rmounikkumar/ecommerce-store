@@ -7,6 +7,7 @@ import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { ScrollToSection } from './components/ScrollToSection';
 import { UserRoute } from './components/UserRoute';
+import { RequireAuth } from './components/UserRoute';
 import { Home } from './pages/Home';
 import { layout } from './config/site';
 import './App.css';
@@ -34,10 +35,38 @@ function App() {
                 {layout.showBottomNav && <BottomNav />}
                 <main>
                   <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<ProductListing />} />
-                    <Route path="/product/:id" element={<ProductDetail />} />
-                    <Route path="/cart" element={<Cart />} />
+                    <Route
+                      path="/"
+                      element={
+                        <RequireAuth>
+                          <Home />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path="/products"
+                      element={
+                        <RequireAuth>
+                          <ProductListing />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path="/product/:id"
+                      element={
+                        <RequireAuth>
+                          <ProductDetail />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path="/cart"
+                      element={
+                        <RequireAuth>
+                          <Cart />
+                        </RequireAuth>
+                      }
+                    />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/otp" element={<OtpLogin />} />

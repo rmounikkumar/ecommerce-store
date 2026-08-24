@@ -75,8 +75,8 @@ export const nav = {
     { label: 'Contact', to: '/#contact' }
   ],
   guest: [
-    { label: 'Sign In', to: '/login', variant: 'primary' },
-    { label: 'Sign Up', to: '/register', variant: 'ghost' }
+    { label: 'Login', to: '/login', variant: 'primary' },
+    { label: 'Register', to: '/register', variant: 'ghost' }
   ],
   account: [
     { label: 'My Orders', to: '/account/orders', roles: ['user'] },
