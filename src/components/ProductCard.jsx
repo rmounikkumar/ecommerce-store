@@ -2,19 +2,45 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatCurrency, discountPercent } from '../utils/format';
-import {
-  formatCompactCurrency,
-  getBrand,
-  getRating,
-  getReviewCount,
-  getStock,
-  getStockCount,
-  getSpecs,
-  getOffer,
-  getDelivery,
-  getDeliveryDate
-} from '../utils/catalog';
+import { getStock } from '../utils/catalog';
 import './ProductCard.css';
+
+const WISHLIST_KEY = 'shopeasy-wishlist';
+
+function readWishlist() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(WISHLIST_KEY));
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeWishlist(list) {
+  try {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+function HeartIcon({ filled }) {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
 
 export function ProductCard({ product, variant = 'classic' }) {
   const { addToCart } = useCart();
@@ -22,6 +48,8 @@ export function ProductCard({ product, variant = 'classic' }) {
   const discount = discountPercent(product.price, product.mrp);
   const images = product.images && product.images.length ? product.images : [product.image];
   const [activeImage, setActiveImage] = useState(0);
+  const [wishlisted, setWishlisted] = useState(() => readWishlist().includes(product.id));
+  const outOfStock = getStock(product) === 'out';
 
   const prevImage = (event) => {
     event.preventDefault();
@@ -47,7 +75,7 @@ export function ProductCard({ product, variant = 'classic' }) {
     addToCart(product);
   };
 
-const handleBuyNow = async (event) => {
+  const handleBuyNow = async (event) => {
     event.preventDefault();
     event.stopPropagation();
     const added = await addToCart(product);
@@ -56,124 +84,22 @@ const handleBuyNow = async (event) => {
     }
   };
 
-  if (variant === 'flipkart') {
-    const stock = getStock(product);
-    const outOfStock = stock === 'out';
-    const rating = getRating(product);
-    const reviews = getReviewCount(product);
-    const delivery = getDelivery(product);
-
-    return (
-      <article className={`product-card product-card--flipkart ${outOfStock ? 'is-out-of-stock' : ''}`}>
-        <Link to={`/product/${product.id}`} className="fk-img-link" aria-label={`View ${product.name} details`}>
-          <div className="product-image">
-            {images.map((src, index) => (
-              <img
-                key={src}
-                src={src}
-                alt={`${product.name} view ${index + 1}`}
-                loading="lazy"
-                className={index === activeImage ? 'product-image-item product-image-item--active' : 'product-image-item'}
-                onError={(event) => { event.currentTarget.src = images[0]; }}
-              />
-            ))}
-            {images.length > 1 && (
-              <div className="product-image-controls">
-                <button className="image-nav-btn image-nav-btn--prev" onClick={prevImage} aria-label="Previous image">‹</button>
-                <button className="image-nav-btn image-nav-btn--next" onClick={nextImage} aria-label="Next image">›</button>
-              </div>
-            )}
-            {images.length > 1 && (
-              <div className="image-dots">
-                {images.map((src, index) => (
-                  <button
-                    key={src}
-                    className={`image-dot ${index === activeImage ? 'image-dot--active' : ''}`}
-                    onClick={selectImage(index)}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </Link>
-
-        <div className="fk-details">
-          <Link to={`/product/${product.id}`} className="fk-title-link">
-            <div className="fk-brand-row">
-              <span className="product-category">{getBrand(product)}</span>
-              {stock === 'low' && <span className="fk-stock fk-stock--low">Only {getStockCount(product)} left!</span>}
-              {outOfStock && <span className="fk-stock fk-stock--out">Currently Unavailable</span>}
-            </div>
-            <h3 className="product-name">{product.name}</h3>
-            <div className="fk-meta">
-              <span className="fk-rating-badge">
-                {rating}
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 2l2.9 6.26L21 9.27l-4.5 4.38L17.8 20 12 16.77 6.2 20l1.3-6.35L3 9.27l6.1-1.01z" />
-                </svg>
-              </span>
-              <span className="fk-reviews">({reviews.toLocaleString('en-IN')})</span>
-            </div>
-          </Link>
-
-          <div className="fk-price-row">
-            <span className="fk-price">{formatCompactCurrency(product.price)}</span>
-            {product.mrp > product.price && (
-              <span className="fk-mrp">{formatCompactCurrency(product.mrp)}</span>
-            )}
-            {discount > 0 && <span className="fk-discount">{discount}% off</span>}
-          </div>
-
-          <ul className="fk-specs">
-            {getSpecs(product).map(spec => (
-              <li key={spec}>{spec}</li>
-            ))}
-          </ul>
-
-          {!outOfStock && (
-            <>
-              <div className="fk-offer">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                  <path d="M12 9v4" />
-                  <path d="M12 17h.01" />
-                  <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z" />
-                </svg>
-                {getOffer(product)}
-              </div>
-              <div className="fk-delivery">
-                <span className={`fk-delivery-text ${delivery.free ? 'fk-delivery-text--free' : ''}`}>{delivery.text}</span>
-                <span className="fk-delivery-date">By {getDeliveryDate()}</span>
-              </div>
-            </>
-          )}
-
-          <div className="fk-footer">
-            <button
-              className="fk-add-btn"
-              onClick={handleAdd}
-              disabled={outOfStock}
-              aria-label={`Add ${product.name} to cart`}
-            >
-              Add to Cart
-            </button>
-            <button
-              className="fk-buy-btn"
-              onClick={handleBuyNow}
-              disabled={outOfStock}
-              aria-label={`Buy ${product.name} now`}
-            >
-              Buy Now
-            </button>
-          </div>
-        </div>
-      </article>
-    );
-  }
+  const toggleWishlist = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setWishlisted(prev => {
+      const list = readWishlist().filter(id => id !== product.id);
+      if (!prev) list.push(product.id);
+      writeWishlist(list);
+      return !prev;
+    });
+  };
 
   return (
-    <article className="product-card">
-      <Link to={`/product/${product.id}`} className="product-link" aria-label={`View ${product.name} details`}>
+    <article
+      className={`product-card${variant === 'flipkart' ? ' product-card--flipkart' : ''}${outOfStock ? ' is-out-of-stock' : ''}`}
+    >
+      <Link to={`/product/${product.id}`} className="pc-card-link" aria-label={`View ${product.name} details`}>
         <div className="product-image">
           {images.map((src, index) => (
             <img
@@ -186,6 +112,16 @@ const handleBuyNow = async (event) => {
             />
           ))}
           {discount > 0 && <span className="product-discount-badge">{discount}% OFF</span>}
+          <button
+            type="button"
+            className={`pc-wish-btn${wishlisted ? ' pc-wish-btn--active' : ''}`}
+            onClick={toggleWishlist}
+            aria-pressed={wishlisted}
+            aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+          >
+            <HeartIcon filled={wishlisted} />
+          </button>
+          {outOfStock && <span className="pc-oos-pill">Out of Stock</span>}
           {images.length > 1 && (
             <div className="product-image-controls">
               <button className="image-nav-btn image-nav-btn--prev" onClick={prevImage} aria-label="Previous image">‹</button>
@@ -205,25 +141,31 @@ const handleBuyNow = async (event) => {
             </div>
           )}
         </div>
-        <div className="product-info">
-          <span className="product-category">{product.category}</span>
-          <h3 className="product-name">{product.name}</h3>
-        </div>
+        <span className="pc-name">{product.name}</span>
+        <span className="pc-price">{formatCurrency(product.price)}</span>
+        {variant === 'flipkart' && (
+          <div className="pc-footer-actions">
+            <button
+              type="button"
+              className="pc-action-btn pc-action-btn--primary"
+              onClick={handleAdd}
+              disabled={outOfStock}
+              aria-label={`Add ${product.name} to cart`}
+            >
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              className="pc-action-btn pc-action-btn--ghost"
+              onClick={handleBuyNow}
+              disabled={outOfStock}
+              aria-label={`Buy ${product.name} now`}
+            >
+              Buy Now
+            </button>
+          </div>
+        )}
       </Link>
-      <div className="product-info">
-        <p className="product-description">{product.description}</p>
-        <div className="product-footer">
-          <span className="product-price">
-            {formatCurrency(product.price)}
-            {product.mrp > product.price && (
-              <span className="product-mrp">{formatCurrency(product.mrp)}</span>
-            )}
-          </span>
-          <button className="add-to-cart-btn" onClick={handleAdd} aria-label={`Add ${product.name} to cart`}>
-            Add to Cart
-          </button>
-        </div>
-      </div>
     </article>
   );
 }

@@ -314,17 +314,17 @@
   padding: 13px 16px;
   border: none;
   border-radius: 10px;
-  background: var(--gradient-primary);
-  color: #fff;
+  background: #FFD814;
+  color: #212121;
   font-size: 0.9375rem;
   font-weight: 700;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 216, 20, 0.35);
 }
 
 .cp-checkout:hover {
-  opacity: 0.9;
+  background: #F5CE0D;
 }
 
 .cp-checkout:active {
@@ -390,6 +390,14 @@
   font-weight: 700;
   text-decoration: none;
   display: inline-block;
+  transition: filter var(--transition), transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.cp-btn-primary:hover,
+.cp-btn-primary:focus-visible,
+.cp-btn-ghost:hover,
+.cp-btn-ghost:focus-visible {
+  text-decoration: none;
 }
 
 .cp-btn-primary {
@@ -400,6 +408,12 @@
 
 .cp-btn-primary:hover {
   opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.45);
+}
+
+.cp-btn-primary:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .cp-btn-ghost {
@@ -409,6 +423,13 @@
 
 .cp-btn-ghost:hover {
   border-color: var(--color-border-focus);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  transform: translateY(-2px);
+}
+
+.cp-btn-ghost:active {
+  transform: translateY(0) scale(0.98);
 }
 
 @media (max-width: 1024px) {

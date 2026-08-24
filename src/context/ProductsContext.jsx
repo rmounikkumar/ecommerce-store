@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { api } from '../api/client';
+import { products as FALLBACK_PRODUCTS } from '../data/products';
 
 const ProductsContext = createContext();
 
@@ -14,7 +15,12 @@ export function ProductsProvider({ children }) {
       setProducts(data.products);
       setError(null);
     } catch (err) {
-      setError(err.message);
+      if (import.meta.env.DEV) {
+        setProducts(FALLBACK_PRODUCTS);
+        setError(null);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

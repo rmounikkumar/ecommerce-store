@@ -105,21 +105,21 @@
 
 .place-order-btn {
   width: 100%;
-  background: var(--gradient-pink);
-  color: #fff;
+  background: #FFD814;
+  color: #212121;
   border: none;
   padding: 1rem;
   border-radius: var(--radius);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.125rem;
   cursor: pointer;
-  box-shadow: 0 4px 24px var(--glow-pink);
+  box-shadow: 0 4px 20px rgba(255, 216, 20, 0.35);
   transition: filter var(--transition), box-shadow var(--transition);
 }
 
 .place-order-btn:hover {
-  filter: brightness(1.15);
-  box-shadow: 0 6px 32px var(--glow-pink);
+  background: #F5CE0D;
+  box-shadow: 0 6px 28px rgba(255, 216, 20, 0.45);
 }
 
 .place-order-btn:disabled {
