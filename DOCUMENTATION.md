@@ -21,9 +21,9 @@ For every feature you get three things: **What it does** → **How it works** �
 - **Why it's useful:** Your store looks finished and trustworthy from the first minute. You can also re-brand everything (store name, logo, tagline, colors) from one settings file.
 
 #### A2. Product catalog (108 demo products, 9 categories)
-- **What it does:** Comes pre-loaded with 108 ready-made products across 9 categories — Mobiles, Electronics, Fashion, Footwear, Home & Kitchen, Appliances, Beauty & Grooming, Sports & Fitness, Toys & Books. Each has photos, price, original price (MRP), and a description.
-- **How it works:** The products live in the database. On first start the app fills the catalog automatically; from then on you manage it from the admin panel.
-- **Why it's useful:** You can demo or launch instantly with realistic-looking stock, then edit prices/products whenever you like — or clear the catalog and add your own.
+- **What it does:** Comes pre-loaded with 108 ready-made products across 9 categories — Mobiles, Electronics, Fashion, Footwear, Home & Kitchen, Appliances, Beauty & Grooming, Sports & Fitness, Toys & Books. Cards are clean and image-focused: photo, discount badge, wishlist heart, name, and price.
+- **How it works:** The products live in the database and fill automatically on first start. Cards keep a consistent size and alignment; hovering gives a small lift with a soft glow and a slight image zoom. On desktop, the shop page also offers a list layout toggle (mobile always uses the grid for the best fit).
+- **Why it's useful:** You can demo or launch instantly with a modern, professional-looking catalog, then edit prices/products whenever you like — or clear the catalog and add your own.
 
 #### A3. Search, filters, and sorting
 - **What it does:** Customers can search by name, and filter by category, price range, brand, rating, discount, and availability (in stock / out of stock). They can sort by popularity, price, newest, or rating, and switch between a grid and a list view.
@@ -41,14 +41,14 @@ For every feature you get three things: **What it does** → **How it works** �
 - **Why it's useful:** Guests can shop without forcing an account (fewer abandoned carts), and signed-in customers never lose their cart. Stock limits are enforced at every step.
 
 #### A6. Checkout
-- **What it does:** A shipping-address form, then order placement, then optional online payment.
-- **How it works:** The customer fills in their name/address/phone, and the store creates the order. Prices are **recalculated on the server** (the customer can't change them). If online payments are switched on, a payment popup opens (UPI, cards, net banking); if not, orders are placed directly.
-- **Why it's useful:** A trustworthy, secure checkout that always charges the correct amount.
+- **What it does:** A shipping-address form, a payment method choice (**Pay Online** or **Cash on Delivery**), then order placement.
+- **How it works:** The customer fills in their name/address/phone and picks how to pay. Prices are **recalculated on the server** (the customer can't change them). With "Pay Online", the Razorpay popup opens (UPI, cards, net banking) — or, if no payment keys are set, orders are placed directly in demo mode. With "Cash on Delivery", the order is placed instantly with no gateway.
+- **Why it's useful:** A trustworthy, secure checkout that always charges the correct amount — and gives customers the COD option most Indian shoppers expect.
 
 #### A7. Order confirmation & history
-- **What it does:** After ordering, customers see a confirmation page with the order summary and address. A "My Orders" page lists all their orders, with a "Pay Now" button if a payment is still pending.
-- **How it works:** Orders are stored in the database per customer and shown from their account area.
-- **Why it's useful:** Customers can track what they bought and finish a missed payment — less confusion and fewer support questions.
+- **What it does:** After ordering, customers see a confirmation page with the order summary and address. A "My Orders" page lists all their orders, with a **Cancel Order** button for pending/processing orders and a "Pay Now" button if an online payment is still pending.
+- **How it works:** Orders are stored in the database per customer. Cancelling is confirmed with one click, the items go back to stock automatically, and cancelled orders show a clear "Cancelled" view (with refund information if the order was already paid).
+- **Why it's useful:** Customers can track what they bought, finish a missed payment, or cancel by themselves — less confusion and fewer support questions.
 
 ### 🔐 B. Accounts & security
 
@@ -82,6 +82,11 @@ For every feature you get three things: **What it does** → **How it works** �
 - **What it does:** Accepts UPI, credit/debit cards, and net banking through Razorpay (the popular Indian payment gateway).
 - **How it works:** Payments are switched on by adding free test keys (or paid live keys). Every payment is verified on the server with a cryptographic signature before the order is marked paid.
 - **Why it's useful:** You control whether the store takes real money or runs as a demo. It works either way — with keys = real checkout, without keys = "place order" demo mode.
+
+#### C2. Cash on Delivery (COD)
+- **What it does:** Customers can choose to pay in cash when the order arrives instead of paying online.
+- **How it works:** At checkout the customer picks "Pay Online" or "Cash on Delivery". COD orders skip the payment gateway entirely: they are stored with payment method `cod` (unpaid) and move straight to **Processing**. The confirmation page shows a "Cash on Delivery" badge and reminds the customer to keep the exact amount ready. Admins collect the cash at delivery and mark the order **Delivered** from the admin panel.
+- **Why it's useful:** Most Indian shoppers expect COD — it builds trust and reaches customers who don't use online payments. If a COD order is cancelled before delivery, stock is restored automatically and nothing was ever charged.
 
 ### 📦 D. Real inventory (stock) tracking
 
@@ -481,7 +486,7 @@ Methods: `setPassword(plain)`, `verifyPassword(plain)`, `toSafeJSON()` (never ex
 | `subtotal` / `shipping` / `total` | Number | server-computed |
 | `status` | `Pending / Processing / Shipped / Delivered / Cancelled` | |
 | `shippingInfo` | { firstName, lastName, email, phone, address, city, zip } | |
-| `payment` | { method, razorpayOrderId, razorpayPaymentId, razorpaySignature, paid, paidAt } | |
+| `payment` | { method: `'razorpay' \| 'cod' \| ''`, razorpayOrderId, razorpayPaymentId, razorpaySignature, paid, paidAt } | COD orders store `method:'cod'`, `paid:false` |
 
 ---
 
@@ -535,14 +540,15 @@ Product body: `{ name, price, mrp?, description?, category, image, images?, popu
 ### Orders (`/api/orders`)
 | Method | Route | Access | Notes |
 | --- | --- | --- | --- |
-| POST | `/` | signed in | create order + Razorpay order; `{ order, payment }` |
+| POST | `/` | signed in | create order (+ Razorpay order when paying online); `{ order, payment }` |
 | POST | `/:id/verify-payment` | owner/admin | verify Razorpay signature |
 | GET | `/mine` | signed in | current user's orders |
 | GET | `/all` | admin | all orders |
 | GET | `/:id` | owner/admin | order detail |
+| POST | `/:id/cancel` | owner/admin | cancel a Pending/Processing order; items are restocked automatically |
 | PATCH | `/:id/status` | admin | `{ status }` |
 
-Create-order body: `{ items: [{ product, quantity }], shippingInfo: { firstName, lastName, email, phone?, address, city, zip } }`. The server re-fetches products, validates **stock** (rejects over-stock/out-of-stock line items with a clear error), computes `subtotal`/`shipping`/`total` itself, **atomically decrements stock**, creates the order (+ a Razorpay order only when keys are configured), and emails a confirmation receipt via Brevo.
+Create-order body: `{ items: [{ product, quantity }], shippingInfo: { firstName, lastName, email, phone?, address, city, zip }, paymentMethod?: 'online' \| 'cod' }`. The server re-fetches products, validates **stock** (rejects over-stock/out-of-stock line items with a clear error), computes `subtotal`/`shipping`/`total` itself, **atomically decrements stock**, creates the order (+ a Razorpay order only when paying online with keys configured — COD orders skip the gateway), and emails a confirmation receipt via Brevo.
 
 ### Users (`/api/users`)
 | Method | Route | Access | Notes |

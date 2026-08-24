@@ -10,11 +10,14 @@
 - **Typing-based live search** — instant product & category suggestions as you type (keyboard-friendly)
 - **Admin dashboard** — manage products, stock, order statuses, and customers
 - **Accounts** — email/password login plus **passwordless email OTP** sign-in
-- **Payments** — Razorpay (UPI / cards / net banking), optional — runs in demo mode without keys
+- **Payments** — Razorpay (UPI / cards / net banking), optional demo mode without keys, plus **Cash on Delivery**
 - **Real inventory** — per-product stock, auto-decremented on orders, never oversells
 - **Email** — OTP login codes and **order confirmation receipts** (free via Brevo, 300 emails/day)
 - **Secure** — hashed passwords, httpOnly cookies, rotating session tokens, server-side price checks
 - **Re-brandable** — store name, colors, and pricing controlled from one settings file
+- **Light & dark theme** — one-click header toggle, remembered per visitor
+- **Self-service order cancellation** — customers can cancel pending/processing orders from My Orders; stock is restored automatically
+- **Wishlist hearts** — save products from any product card (stored in the browser)
 
 ## Quick start (5 minutes)
 
