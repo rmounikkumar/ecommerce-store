@@ -656,3 +656,11 @@
 .admin-product-card.is-out .admin-pc-img-wrap img {
   opacity: 0.55;
 }
+.admin-section-header {
+  scroll-margin-top: 90px;
+}
+
+.admin-form.editing {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 8px 24px var(--glow-primary);
+}

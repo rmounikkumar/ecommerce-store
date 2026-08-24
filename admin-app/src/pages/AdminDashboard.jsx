@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import { useOrders } from '../context/OrdersContext';
@@ -50,6 +50,7 @@ export function AdminDashboard() {
   const [pwMessage, setPwMessage] = useState('');
   const [pwError, setPwError] = useState('');
   const [pwBusy, setPwBusy] = useState(false);
+  const formSectionRef = useRef(null);
 
   const handleLogout = async () => {
     await logout();
@@ -81,6 +82,7 @@ export function AdminDashboard() {
     });
     setEditing(true);
     setFormError('');
+    formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleDelete = async (productId, productName) => {
@@ -263,7 +265,7 @@ export function AdminDashboard() {
 
         {activeTab === 'products' && (
           <div className="admin-panel">
-            <div className="admin-section-header">
+            <div className="admin-section-header" ref={formSectionRef}>
               <h2>{editing ? 'Edit Product' : 'Add Product'}</h2>
               {editing && (
                 <button className="admin-link-btn" onClick={startAdd}>
@@ -272,7 +274,7 @@ export function AdminDashboard() {
               )}
             </div>
 
-            <form className="admin-form" onSubmit={handleSubmit}>
+            <form className={`admin-form ${editing ? 'editing' : ''}`} onSubmit={handleSubmit}>
               <div className="form-grid">
                 <div className="form-group">
                   <label htmlFor="admin-name">Name *</label>
