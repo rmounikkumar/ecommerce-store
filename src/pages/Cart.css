@@ -161,7 +161,7 @@
 
 .cp-item-mrp {
   font-size: 0.8125rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   text-decoration: line-through;
 }
 
@@ -403,13 +403,13 @@
 .cp-btn-primary {
   background: var(--gradient-primary);
   color: #fff;
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 24px rgba(40, 116, 240, 0.35);
 }
 
 .cp-btn-primary:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.45);
+  box-shadow: 0 10px 28px rgba(40, 116, 240, 0.45);
 }
 
 .cp-btn-primary:active {

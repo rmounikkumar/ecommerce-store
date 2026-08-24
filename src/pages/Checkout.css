@@ -301,12 +301,12 @@
 
 .payment-option.is-selected {
   border-color: var(--color-primary-hover);
-  background: var(--color-primary-soft, rgba(124, 58, 237, 0.08));
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.18);
+  background: var(--color-primary-soft, rgba(40, 116, 240, 0.08));
+  box-shadow: 0 4px 16px rgba(40, 116, 240, 0.18);
 }
 
 .payment-option input[type='radio'] {
-  accent-color: #7c3aed;
+  accent-color: #2874F0;
   width: 1.05rem;
   height: 1.05rem;
   flex-shrink: 0;
@@ -320,7 +320,7 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  background: rgba(124, 58, 237, 0.12);
+  background: rgba(40, 116, 240, 0.12);
   color: var(--color-primary-hover);
   flex-shrink: 0;
 }

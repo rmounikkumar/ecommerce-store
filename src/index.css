@@ -5,12 +5,12 @@
 }
 
 :root {
-  --color-primary: #7C3AED;
-  --color-primary-hover: #A855F7;
-  --color-primary-soft: rgba(124, 58, 237, 0.16);
-  --color-accent: #EC4899;
-  --color-accent-hover: #F472B6;
-  --color-accent-soft: rgba(236, 72, 153, 0.16);
+  --color-primary: #2874F0;
+  --color-primary-hover: #5C9DFF;
+  --color-primary-soft: rgba(40, 116, 240, 0.16);
+  --color-accent: #FF9F01;
+  --color-accent-hover: #FFC24D;
+  --color-accent-soft: rgba(255, 159, 1, 0.16);
   --color-buy: #2563EB;
   --color-buy-hover: #06B6D4;
   --color-cyan: #06B6D4;
@@ -20,7 +20,7 @@
   --color-danger: #F87171;
   --color-danger-hover: #EF4444;
   --color-danger-soft: rgba(248, 113, 113, 0.16);
-  --color-warning: #F472B6;
+  --color-warning: #FFC24D;
   --color-bg: #0B1020;
   --color-surface: #141B34;
   --color-surface-2: #1A2340;
@@ -30,15 +30,15 @@
   --color-text-secondary: #94A3B8;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(255, 255, 255, 0.15);
-  --color-border-focus: #A855F7;
+  --color-border-focus: #5C9DFF;
   --color-footer: #0B1020;
-  --gradient-primary: linear-gradient(135deg, #7C3AED, #A855F7);
-  --gradient-pink: linear-gradient(135deg, #EC4899, #F472B6);
+  --gradient-primary: linear-gradient(135deg, #2874F0, #5C9DFF);
+  --gradient-pink: linear-gradient(135deg, #FF9F01, #FFC24D);
   --gradient-blue: linear-gradient(135deg, #2563EB, #06B6D4);
-  --gradient-hero: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(37, 99, 235, 0.28), rgba(236, 72, 153, 0.25));
-  --glow-primary: rgba(124, 58, 237, 0.35);
+  --gradient-hero: linear-gradient(135deg, rgba(40, 116, 240, 0.16), rgba(37, 99, 235, 0.12), rgba(255, 159, 1, 0.10));
+  --glow-primary: rgba(40, 116, 240, 0.35);
   --glow-blue: rgba(6, 182, 212, 0.30);
-  --glow-pink: rgba(236, 72, 153, 0.35);
+  --glow-pink: rgba(255, 159, 1, 0.35);
   --glass-blur: 20px;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.30);
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
@@ -167,9 +167,9 @@ h1, h2, h3, h4, h5, h6 {
 /* ---------- Light theme (opt-in via header toggle). Default = original dark. ---------- */
 
 [data-theme="light"] {
-  --color-primary: #7C3AED;
+  --color-primary: #2874F0;
   --color-primary-hover: #6D28D9;
-  --color-primary-soft: rgba(124, 58, 237, 0.10);
+  --color-primary-soft: rgba(40, 116, 240, 0.10);
   --color-accent: #DB2777;
   --color-accent-hover: #BE185D;
   --color-accent-soft: rgba(219, 39, 119, 0.10);
@@ -192,15 +192,15 @@ h1, h2, h3, h4, h5, h6 {
   --color-text-secondary: #5B6472;
   --color-border: rgba(17, 24, 39, 0.10);
   --color-border-hover: rgba(17, 24, 39, 0.20);
-  --color-border-focus: #7C3AED;
+  --color-border-focus: #2874F0;
   --color-footer: #F8F9FA;
-  --gradient-primary: linear-gradient(135deg, #7C3AED, #A855F7);
-  --gradient-pink: linear-gradient(135deg, #EC4899, #F472B6);
+  --gradient-primary: linear-gradient(135deg, #2874F0, #5C9DFF);
+  --gradient-pink: linear-gradient(135deg, #FF9F01, #FFC24D);
   --gradient-blue: linear-gradient(135deg, #2563EB, #06B6D4);
-  --gradient-hero: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(37, 99, 235, 0.05), rgba(236, 72, 153, 0.05));
-  --glow-primary: rgba(124, 58, 237, 0.18);
+  --gradient-hero: linear-gradient(135deg, rgba(40, 116, 240, 0.06), rgba(37, 99, 235, 0.05), rgba(255, 159, 1, 0.05));
+  --glow-primary: rgba(40, 116, 240, 0.18);
   --glow-blue: rgba(6, 182, 212, 0.15);
-  --glow-pink: rgba(236, 72, 153, 0.16);
+  --glow-pink: rgba(255, 159, 1, 0.16);
   --shadow-sm: 0 2px 8px rgba(16, 24, 40, 0.06);
   --shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
   --shadow-lg: 0 16px 48px rgba(16, 24, 40, 0.12);
@@ -230,4 +230,59 @@ html[data-theme="light"] body {
 [data-theme="light"] .pd-gallery-nav {
   background: rgba(255, 255, 255, 0.92);
   color: var(--color-text);
+}
+/* ---------- DynaPuff display font (whole site) ---------- */
+
+@font-face {
+  font-family: 'DynaPuff';
+  src: url('/fonts/DynaPuff-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DynaPuff';
+  src: url('/fonts/DynaPuff-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DynaPuff';
+  src: url('/fonts/DynaPuff-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DynaPuff';
+  src: url('/fonts/DynaPuff-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-display: 'DynaPuff', 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-display);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.4px;
+}
+
+button,
+[class*="btn"] {
+  font-family: var(--font-display);
+  letter-spacing: 0.3px;
 }

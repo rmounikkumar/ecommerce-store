@@ -33,7 +33,7 @@ export function openRazorpayCheckout({ payment, orderNumber, name, email, contac
       },
       notes: { order: orderNumber },
       theme: {
-        color: '#7C3AED'
+        color: '#2874F0'
       },
       modal: {
         ondismiss: () => resolve(null)

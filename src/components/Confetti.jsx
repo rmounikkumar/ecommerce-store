@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Confetti.css';
 
-const COLORS = ['#22D3EE', '#F472B6', '#FBBF24', '#34D399', '#818CF8', '#FB7185', '#A3E635', '#F97316'];
+const COLORS = ['#22D3EE', '#FFC24D', '#FBBF24', '#34D399', '#818CF8', '#FB7185', '#A3E635', '#F97316'];
 
 export function Confetti({ count = 120 }) {
   const [pieces, setPieces] = useState([]);

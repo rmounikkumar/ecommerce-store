@@ -136,7 +136,7 @@ export function Register() {
                     className="strength-fill"
                     style={{
                       width: `${(metCount / passwordRules.length) * 100}%`,
-                      backgroundColor: metCount < 3 ? '#F87171' : metCount < 5 ? '#F472B6' : '#22D3EE'
+                      backgroundColor: metCount < 3 ? '#F87171' : metCount < 5 ? '#FFC24D' : '#22D3EE'
                     }}
                   />
                 </div>

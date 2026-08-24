@@ -11,7 +11,7 @@ const AMBASSADORS = [
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces',
     emoji: '🏏',
     collection: 'Sports & Fitness',
-    theme: ['#7C3AED', '#A855F7']
+    theme: ['#2874F0', '#5C9DFF']
   },
   {
     name: 'Deepika Padukone',
@@ -21,7 +21,7 @@ const AMBASSADORS = [
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=faces',
     emoji: '🎬',
     collection: 'Fashion',
-    theme: ['#EC4899', '#F472B6']
+    theme: ['#FF9F01', '#FFC24D']
   },
   {
     name: 'MS Dhoni',
@@ -81,7 +81,7 @@ const AMBASSADORS = [
     image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces',
     emoji: '🎤',
     collection: 'Electronics',
-    theme: ['#F43F5E', '#EC4899']
+    theme: ['#F43F5E', '#FF9F01']
   }
 ];
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import { ProductCard } from '../components/ProductCard';
-import { Ambassadors } from '../components/Ambassadors';
+import { TrendingNow } from '../components/TrendingNow';
 import { Reveal } from '../components/Reveal';
 import { formatCurrency, discountPercent } from '../utils/format';
 import { pricing, site } from '../config/site';
@@ -49,8 +49,6 @@ export function Home() {
 
   return (
     <>
-      <Ambassadors />
-
       <section className="hero">
         <div className="hero-container">
           <div className="hero-copy">
@@ -88,6 +86,8 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      <TrendingNow />
 
       <section className="home-section categories-section">
         <div className="home-container">
