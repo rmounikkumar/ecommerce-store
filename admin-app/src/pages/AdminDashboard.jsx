@@ -40,6 +40,7 @@ export function AdminDashboard() {
   const [formError, setFormError] = useState('');
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [productView, setProductView] = useState('list');
 
   const [customers, setCustomers] = useState([]);
   const [customersLoaded, setCustomersLoaded] = useState(false);
@@ -378,6 +379,70 @@ export function AdminDashboard() {
               </button>
             </form>
 
+            <div className="admin-view-toggle" role="group" aria-label="Product view">
+              <button
+                className={productView === 'list' ? 'active' : ''}
+                onClick={() => setProductView('list')}
+              >
+                ☰ List
+              </button>
+              <button
+                className={productView === 'grid' ? 'active' : ''}
+                onClick={() => setProductView('grid')}
+              >
+                ▦ Grid
+              </button>
+            </div>
+
+            {productView === 'grid' ? (
+              <div className="admin-products-grid">
+                {products.map(product => (
+                  <article
+                    key={product.id}
+                    className={`admin-product-card ${product.stock === 0 ? 'is-out' : ''}`}
+                  >
+                    <div className="admin-pc-img-wrap">
+                      <img src={product.image} alt={product.name} loading="lazy" />
+                      {product.stock === 0 && <span className="admin-pc-oos">Out of stock</span>}
+                    </div>
+                    <div className="admin-pc-body">
+                      <span className="admin-pc-category">{product.category}</span>
+                      <h3 className="admin-pc-name">{product.name}</h3>
+                      <div className="admin-pc-price-row">
+                        <span className="admin-pc-price">{formatCurrency(product.price)}</span>
+                        {product.mrp > product.price && (
+                          <span className="admin-product-mrp">{formatCurrency(product.mrp)}</span>
+                        )}
+                      </div>
+                      <div className="admin-pc-meta">
+                        <span>Stock: {product.stock ?? '—'}</span>
+                        <span>Popularity: {product.popularity ?? '—'}</span>
+                        <span>{product.dateAdded ? formatDate(product.dateAdded) : ''}</span>
+                      </div>
+                      <div className="admin-row-actions">
+                        <button
+                          className="admin-edit-btn"
+                          onClick={() => startEdit(product)}
+                          disabled={busy}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="admin-delete-btn"
+                          onClick={() => handleDelete(product.id, product.name)}
+                          disabled={busy}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+                {products.length === 0 && (
+                  <p className="admin-table-empty">No products yet. Add one above.</p>
+                )}
+              </div>
+            ) : (
             <div className="admin-products-table-wrap">
               <table className="admin-products-table">
                 <thead>
@@ -443,6 +508,7 @@ export function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+            )}
           </div>
         )}
 
