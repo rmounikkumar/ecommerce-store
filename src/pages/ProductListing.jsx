@@ -69,6 +69,16 @@ export function ProductListing() {
   const [showOutOfStock, setShowOutOfStock] = useState(false);
   const [sortBy, setSortBy] = useState('popular');
   const [view, setView] = useState('grid');
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const enforceGridOnMobile = () => {
+      if (mq.matches) setView('grid');
+    };
+    enforceGridOnMobile();
+    mq.addEventListener('change', enforceGridOnMobile);
+    return () => mq.removeEventListener('change', enforceGridOnMobile);
+  }, []);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
