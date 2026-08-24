@@ -37,6 +37,9 @@ export async function api(path, { method = 'GET', body } = {}) {
   if (!res.ok) {
     const err = new Error(data.error || 'Something went wrong.');
     err.status = res.status;
+    if (res.status === 401 && !NO_REFRESH_PATHS.includes(path)) {
+      window.dispatchEvent(new CustomEvent('shopeasy:unauthorized'));
+    }
     throw err;
   }
   return data;
