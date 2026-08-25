@@ -16,9 +16,9 @@ For every feature you get three things: **What it does** → **How it works** �
 ### 🛍️ A. The storefront — what your customers see
 
 #### A1. Home page
-- **What it does:** A complete landing page — brand banner, a big hero offer, clickable category tiles, deals of the day, new arrivals, bestsellers, a newsletter signup box, and About/Contact/Legal sections.
-- **How it works:** Every section is data-driven: products, prices, and photos come from the database, so the page updates by itself whenever you add or change products. Nothing is hand-written per product.
-- **Why it's useful:** Your store looks finished and trustworthy from the first minute. You can also re-brand everything (store name, logo, tagline, colors) from one settings file.
+- **What it does:** A complete landing page — brand banner, a big hero offer, a **"Trends you may like" section with two auto-scrolling rows of product cards** (they pause when you hover, so you can still click), clickable category tiles, deals of the day, new arrivals, bestsellers, a newsletter signup box, and About/Contact/Legal sections.
+- **How it works:** Every section is data-driven: products, prices, and photos come from the database, so the page updates by itself whenever you add or change products. Nothing is hand-written per product. The home page is open to everyone — it acts as the store's public overview before sign-in.
+- **Why it's useful:** Your store looks finished and trustworthy from the first minute, and visitors can browse the highlights freely before being asked to create an account.
 
 #### A2. Product catalog (108 demo products, 9 categories)
 - **What it does:** Comes pre-loaded with 108 ready-made products across 9 categories — Mobiles, Electronics, Fashion, Footwear, Home & Kitchen, Appliances, Beauty & Grooming, Sports & Fitness, Toys & Books. Cards are clean and image-focused: photo, discount badge, wishlist heart, name, and price.
@@ -53,9 +53,9 @@ For every feature you get three things: **What it does** → **How it works** �
 ### 🔐 B. Accounts & security
 
 #### B1. Register, login, logout
-- **What it does:** Standard account creation (name, email, password), sign-in, and sign-out.
-- **How it works:** Passwords are scrambled (hashed) before storing — the app never keeps readable passwords. Session is kept in secure browser cookies.
-- **Why it's useful:** Simple and safe — even if the database were ever exposed, passwords couldn't be read.
+- **What it does:** Standard account creation (name, email, password), sign-in, and sign-out. **Shopping requires an account**: the home page and product detail pages are open to everyone as an overview, but the shop listing, cart, and checkout ask you to sign in first — and afterwards drop you exactly where you were headed.
+- **How it works:** Passwords are scrambled (hashed) before storing — the app never keeps readable passwords. Session is kept in secure browser cookies. Login and logout **sync instantly across every open tab** of the store (tabs talk to each other in the background), and if a session ever dies on the server, tabs automatically return to the logged-out state instead of showing errors.
+- **Why it's useful:** Simple and safe — even if the database were ever exposed, passwords couldn't be read — while visitors still get a full look around the store before committing to an account.
 
 #### B2. Email OTP sign-in (no password needed)
 - **What it does:** Customers can sign in with just their email: they request a code, receive a 6-digit code by email, type it in, and they're in.
@@ -110,9 +110,9 @@ For every feature you get three things: **What it does** → **How it works** �
 ### ⚙️ F. Admin dashboard (your control room)
 
 #### F1. Product management
-- **What it does:** Add, edit, and delete products; set name, price, MRP, category, popularity, **stock**, description, and photo.
-- **How it works:** A simple form in the admin panel; changes appear on the store instantly.
-- **Why it's useful:** You run the whole catalog without touching code.
+- **What it does:** Add, edit, and delete products; set name, price, MRP, category, popularity, **stock**, description, and photo. Browse your catalog in a **grid of product cards or a classic list/table** with one toggle.
+- **How it works:** A simple form in the admin panel; changes appear on the store instantly. Clicking **Edit** on any card (grid) or row (list) scrolls you up to the form and highlights it in blue so you never lose track; changes appear on the store instantly.
+- **Why it's useful:** You run the whole catalog without touching code — and the grid view gives you a visual stock check at a glance (out-of-stock items show a red badge).
 
 #### F2. Order management
 - **What it does:** See every order with the customer's details and items, and move it through a status flow: **Pending → Processing → Shipped → Delivered → Cancelled**.
@@ -356,14 +356,15 @@ ecommerce-store/
     ├── components/
     │   ├── Header.jsx/.css     # logo, search, nav, account menu, cart link, mobile menu
     │   ├── ProductCard.jsx/.css# product card, variants: 'classic' and 'flipkart'
-    │   ├── Ambassadors.jsx/.css# sponsored ambassador carousel (auto-rotate 5s)
+    │   ├── TrendingNow.jsx/.css# "Trends you may like" dual auto-scroll marquee (pauses on hover)
+    │   ├── Ambassadors.jsx/.css# optional ambassador carousel (kept in repo, no longer rendered)
     │   ├── AccountTabs.jsx/.css# My Orders / Profile Settings tabs
-    │   ├── UserRoute.jsx       # guard: redirect to /login if signed out
+    │   ├── UserRoute.jsx       # guards: RequireAuth + UserRoute (redirect to /login if signed out)
     │   ├── AdminRoute.jsx      # guard: admin role only
     │   ├── Reveal.jsx          # scroll-reveal wrapper
     │   └── ScrollToSection.jsx # hash-scroll + scroll-to-top on route change
     └── pages/
-        ├── Home.jsx/.css       # Ambassadors → hero → categories → deals → arrivals →
+        ├── Home.jsx/.css       # hero → trends marquee → categories → deals → arrivals →
         │                       #   bestsellers → newsletter → about → contact → legal
         ├── ProductListing.jsx/.css  # search, filters, sort, grid/list views
         ├── ProductDetail.jsx/.css   # gallery, price block, offers, specs, recommendations
@@ -600,10 +601,10 @@ Cart items are full product snapshots + `quantity`. **Signed in** → state is k
 ### Routing (`src/App.jsx`)
 | Route | Page | Guard |
 | --- | --- | --- |
-| `/` | Home | — |
-| `/products` | ProductListing | — |
-| `/product/:id` | ProductDetail | — |
-| `/cart` | Cart | — |
+| `/` | Home | — (public overview) |
+| `/products` | ProductListing | `RequireAuth` |
+| `/product/:id` | ProductDetail | — (public) |
+| `/cart` | Cart | `RequireAuth` |
 | `/login` `/register` `/otp` | auth pages | redirect if signed in |
 | `/checkout` | Checkout | `UserRoute` |
 | `/order/:id` | OrderConfirmation | `UserRoute` |
@@ -611,7 +612,7 @@ Cart items are full product snapshots + `quantity`. **Signed in** → state is k
 | `/account/profile` | Profile | `UserRoute` |
 | `/admin` | AdminDashboard | `AdminRoute` |
 
-Guards (`UserRoute`/`AdminRoute`) render `null` while auth is loading, then `Navigate` to `/login` (remembering the origin via `location.state.from`) when unauthorized.
+Guards (`RequireAuth`/`UserRoute`/`AdminRoute`) render `null` while auth is loading, then `Navigate` to `/login` (remembering the origin via `location.state.from`) when unauthorized. After signing in, Login/Register send the customer back to the page they originally wanted. Home and product detail pages are deliberately public so visitors can browse the store as an overview; the shop listing, cart, and checkout require an account.
 
 ### Deterministic product extras
 Real products store name/price/mrp/description/category/images/popularity/**stock**. Everything else "storefront-flavored" is derived deterministically from the product id via `src/utils/catalog.js`:
@@ -623,8 +624,9 @@ Real products store name/price/mrp/description/category/images/popularity/**stoc
 This means you only manage a catalog of real fields (plus live stock); the card/detail UI always has data. Stock gates add-to-cart on the card, the detail page, and the cart, and the server enforces it at order time.
 
 ### Theming / design system
-- Dark "neo-glass" palette: page `#0B1020`, surfaces `#141B34` / `#1A2340`, purple gradient `#7C3AED → #A855F7`, blue gradient `#2563EB → #06B6D4`, green accents `#22C55E`.
-- All component CSS uses `var(--color-*)`, `var(--gradient-*)`, `var(--radius-*)`, etc. Rebranding = editing `theme` in `site.js` (or `index.css`).
+- Dark "neo-glass" palette with a Flipkart-style brand: page `#0B1020`, surfaces `#141B34` / `#1A2340`, primary blue `#2874F0 → #5C9DFF`, orange accents `#FF9F01 → #FFC24D`, Flipkart-yellow CTAs `#FFD814`, green accents `#22C55E`.
+- **Typography:** the rounded **DynaPuff** font (self-hosted in `public/fonts/`) is used across the whole storefront and admin panel; prices and MRP render in the theme text color (white in dark mode).
+- All component CSS uses `var(--color-*)`, `var(--gradient-*)`, `var(--radius-*)`, etc. Rebranding = editing `theme` in `site.js` (or `index.css`); the admin panel has its own copy of the same tokens in `admin-app/src/index.css`.
 - Reusable bits: `Reveal` scroll animations (`useInView`), `.btn-primary/.btn-secondary` button classes, scroll-to-section on hash links.
 
 ---
@@ -660,7 +662,7 @@ Three tabs:
 5. **Catalog** → replace `src/data/products.js` (or add products via the admin dashboard) — seeds only run when the collection is empty.
 6. **Payments** → set Razorpay keys in `.env`. Without keys, checkout works in "place order" mode.
 7. **OTP email** → set `BREVO_API_KEY` + `BREVO_FROM_EMAIL` in `.env` (free 300 emails/day to any recipient, no domain needed — just verify your own email as sender at Brevo → Senders). Without keys, the dev fallback logs the code to the server console.
-8. **Ambassador banner** → edit `AMBASSADORS` in `src/components/Ambassadors.jsx` (name, role, tagline, quote, image, collection, gradient colors) — or remove `<Ambassadors />` from `Home.jsx`.
+8. **Trends marquee** → the "Trends you may like" section fills itself from your product database (top items by popularity) — nothing to edit. Fonts live in `public/fonts/` (DynaPuff); swap the `@font-face` files in `src/index.css` to change typography.
 9. **Footer/legal** → static sections in `src/pages/Home.jsx`.
 
 ---

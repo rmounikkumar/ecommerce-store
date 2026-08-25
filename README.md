@@ -6,14 +6,15 @@
 
 > 🛍️ **Live demo:** https://ecommerce-store-shop-easy.vercel.app/
 
-- **Storefront** — home page, 108 demo products in 9 categories, search + filters, product pages with galleries, full shopping cart, checkout
+- **Storefront** — home overview and product pages are open to everyone; the shop listing, cart, and checkout ask for a **free account** (you're brought straight back after signing in)
 - **Typing-based live search** — instant product & category suggestions as you type (keyboard-friendly)
-- **Admin dashboard** — manage products, stock, order statuses, and customers
-- **Accounts** — email/password login plus **passwordless email OTP** sign-in
+- **Admin dashboard** — manage products (grid or list view), stock, order statuses, and customers
+- **Accounts** — email/password login plus **passwordless email OTP** sign-in; login & logout **sync instantly across all open browser tabs**
 - **Payments** — Razorpay (UPI / cards / net banking), optional demo mode without keys, plus **Cash on Delivery**
 - **Real inventory** — per-product stock, auto-decremented on orders, never oversells
 - **Email** — OTP login codes and **order confirmation receipts** (free via Brevo, 300 emails/day)
 - **Secure** — hashed passwords, httpOnly cookies, rotating session tokens, server-side price checks
+- **Consistent brand look** — Flipkart-style blue/orange theme with the playful DynaPuff font across the store and admin panel
 - **Re-brandable** — store name, colors, and pricing controlled from one settings file
 - **Light & dark theme** — one-click header toggle, remembered per visitor
 - **Self-service order cancellation** — customers can cancel pending/processing orders from My Orders; stock is restored automatically
