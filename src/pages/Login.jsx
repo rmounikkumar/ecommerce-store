@@ -54,7 +54,7 @@ export function Login() {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </div>
-        <h1>Sign In</h1>
+        <h1>Login</h1>
         <p>Log in to your account to view orders and manage your profile.</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
