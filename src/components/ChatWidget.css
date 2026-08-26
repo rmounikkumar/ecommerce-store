@@ -7,17 +7,24 @@
   height: 58px;
   border: none;
   border-radius: 50%;
-  background: var(--gradient-primary);
-  color: #fff;
+  background: #FFD814;
+  color: #1f2933;
   font-size: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 8px 26px var(--glow-primary);
+  box-shadow: 0 8px 26px rgba(255, 216, 20, 0.35);
   transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.chat-fab svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+  margin: 0 auto;
 }
 
 .chat-fab:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 12px 32px var(--glow-primary);
+  box-shadow: 0 12px 32px rgba(255, 216, 20, 0.45);
 }
 
 .chat-fab--open {
