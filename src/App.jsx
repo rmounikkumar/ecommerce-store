@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { ScrollToSection } from './components/ScrollToSection';
+import { ChatWidget } from './components/ChatWidget';
 import { UserRoute } from './components/UserRoute';
 import { RequireAuth } from './components/UserRoute';
 import { Home } from './pages/Home';
@@ -100,6 +101,7 @@ function App() {
                     </nav>
                   </div>
                 </footer>
+                <ChatWidget />
                 <ScrollToSection />
               </div>
             </Router>

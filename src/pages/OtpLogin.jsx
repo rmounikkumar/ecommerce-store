@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { adminUrl } from '../config/site';
 import { validateEmail } from '../utils/validation';
@@ -7,6 +7,7 @@ import './auth.css';
 
 export function OtpLogin() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, requestOtp, verifyOtp, logout } = useAuth();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -14,10 +15,10 @@ export function OtpLogin() {
   const [error, setError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const from = '/';
+  const from = location.state?.from && location.state.from !== '/otp' ? location.state.from : '/';
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleSend = async (e) => {
