@@ -11,7 +11,7 @@ import './ProductDetail.css';
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { addToCart } = useCart();
   const product = products.find(p => p.id === id);
   const images = product && product.images && product.images.length
@@ -33,6 +33,16 @@ export function ProductDetail() {
       .sort((a, b) => rank(b) - rank(a));
     return [...sameCategory, ...others].slice(0, 8);
   }, [products, product]);
+
+  if (!product && loading) {
+    return (
+      <div className="pd-page pd-page--loading">
+        <div className="container">
+          <p className="pd-loading-text">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
