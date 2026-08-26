@@ -607,13 +607,3 @@
     font-size: 0.66rem;
   }
 }
-.pd-page--loading {
-  min-height: 60vh;
-  display: grid;
-  place-items: center;
-}
-
-.pd-loading-text {
-  color: var(--color-text-secondary);
-  font-size: 0.9rem;
-}

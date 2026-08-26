@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/ProductCard';
+import { SkeletonDetail } from '../components/Skeletons';
 import { formatCurrency, discountPercent } from '../utils/format';
 import { formatCompactCurrency, getBrand, getRating, getReviewCount, getOffer, getStockCount, getStock } from '../utils/catalog';
 import { pricing } from '../config/site';
@@ -35,13 +36,7 @@ export function ProductDetail() {
   }, [products, product]);
 
   if (!product && loading) {
-    return (
-      <div className="pd-page pd-page--loading">
-        <div className="container">
-          <p className="pd-loading-text">Loading product...</p>
-        </div>
-      </div>
-    );
+    return <SkeletonDetail />;
   }
 
   if (!product) {

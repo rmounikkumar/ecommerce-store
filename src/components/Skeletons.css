@@ -1,0 +1,155 @@
+.skel {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--color-surface-2);
+  border-radius: 8px;
+}
+
+.skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: skel-sweep 1.4s ease-in-out infinite;
+}
+
+[data-theme='light'] .skel::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+}
+
+@keyframes skel-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel::after {
+    animation: none;
+  }
+}
+
+.skel-line {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.skel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ---- grid of product cards ---- */
+
+.skel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.skel-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.skel-card-media {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+}
+
+.skel-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem;
+}
+
+/* ---- product detail ---- */
+
+.skel-breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.skel-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.skel-detail-left,
+.skel-detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.skel-detail-right {
+  min-height: 380px;
+}
+
+.skel-detail-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+}
+
+.skel-thumbs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.skel-thumb {
+  width: 56px;
+  height: 56px;
+}
+
+.skel-offer {
+  height: 40px;
+  max-width: 320px;
+}
+
+.skel-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.skel-btn {
+  height: 46px;
+  flex: 1;
+  max-width: 190px;
+  border-radius: var(--radius-sm);
+}
+
+.skel-services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.skel-service-box {
+  height: 58px;
+}
+
+@media (max-width: 900px) {
+  .skel-detail {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .skel-detail-right {
+    min-height: 0;
+  }
+
+  .skel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import { ProductCard } from '../components/ProductCard';
+import { SkeletonGrid } from '../components/Skeletons';
 import { getBrand, getRating, getStock, formatCompact } from '../utils/catalog';
 import { discountPercent } from '../utils/format';
 import './ProductListing.css';
@@ -343,7 +344,7 @@ export function ProductListing() {
             </div>
 
             {loading ? (
-              <p className="pl-empty">Loading products...</p>
+              <SkeletonGrid count={8} />
             ) : filteredProducts.length === 0 ? (
               <div className="pl-empty">
                 <p>No products match your search.</p>
