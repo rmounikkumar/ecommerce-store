@@ -5,14 +5,17 @@
   z-index: 1300;
   width: 58px;
   height: 58px;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
   background: #FFD814;
   color: #1f2933;
   font-size: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 8px 26px rgba(255, 216, 20, 0.35);
-  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 0.55),
+    0 8px 26px rgba(255, 216, 20, 0.35);
+  transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
 }
 
 .chat-fab svg {
@@ -20,11 +23,48 @@
   height: 28px;
   display: block;
   margin: 0 auto;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.08));
+}
+
+.chat-fab::after {
+  content: 'Chat with us';
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
 }
 
 .chat-fab:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 12px 32px rgba(255, 216, 20, 0.45);
+  transform: translateY(-3px) scale(1.06);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 0.55),
+    0 12px 32px rgba(255, 216, 20, 0.45);
+}
+
+.chat-fab:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.chat-fab:active {
+  transform: translateY(1px) scale(0.94);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.18),
+    0 4px 14px rgba(255, 216, 20, 0.3);
 }
 
 .chat-fab--open {

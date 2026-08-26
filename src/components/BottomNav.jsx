@@ -12,7 +12,17 @@ export function BottomNav() {
 
   useEffect(() => {
     document.body.classList.add('has-bottom-nav');
-    return () => document.body.classList.remove('has-bottom-nav');
+    const buzz = (e) => {
+      if (!e.target.closest?.('.bottom-nav-item')) return;
+      if (typeof navigator.vibrate === 'function') {
+        try { navigator.vibrate(12); } catch { /* ignore */ }
+      }
+    };
+    document.addEventListener('pointerdown', buzz);
+    return () => {
+      document.body.classList.remove('has-bottom-nav');
+      document.removeEventListener('pointerdown', buzz);
+    };
   }, []);
 
   const accountPath = user ? '/account/profile' : '/login';
