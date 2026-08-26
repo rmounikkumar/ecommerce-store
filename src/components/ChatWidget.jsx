@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProducts } from '../context/ProductsContext';
 import { api } from '../api/client';
@@ -12,6 +12,7 @@ const STARTER_CHIPS = ['Track my order', "Today's deals", 'Shipping info', 'Paym
 
 export function ChatWidget() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { products } = useProducts();
   const [open, setOpen] = useState(false);
@@ -20,12 +21,17 @@ export function ChatWidget() {
   const [messages, setMessages] = useState(() => [
     {
       from: 'bot',
-      text: "Hi! 👋 I'm the ShopEasy assistant. Ask me about products, deals, your orders, or store policies.",
+      text: "Hi! 👋 I'm the ShopEasy assistant. Ask me about products, deals, your orders, or policies — and on any product page just ask \"tell me about this\"!",
       chips: STARTER_CHIPS
     }
   ]);
   const listRef = useRef(null);
   const busyRef = useRef(false);
+
+  const productId = location.pathname.match(/^\/product\/([^/?]+)/)?.[1] || null;
+  const currentProduct = productId
+    ? products.find(p => (p.id ?? p._id) === productId) || null
+    : null;
 
   useEffect(() => {
     if (listRef.current) {
@@ -41,7 +47,7 @@ export function ChatWidget() {
     busyRef.current = true;
     setTyping(true);
     try {
-      const reply = await getBotReply({ message, products, user, api, pricing });
+      const reply = await getBotReply({ message, products, user, api, pricing, currentProduct });
       setMessages(prev => [
         ...prev,
         { from: 'bot', text: reply.text, note: reply.note, products: reply.products, chips: reply.chips }

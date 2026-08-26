@@ -91,7 +91,7 @@ async function trackOrder(api) {
   }
 }
 
-export async function getBotReply({ message, products, user, api, pricing }) {
+export async function getBotReply({ message, products, user, api, pricing, currentProduct = null }) {
   const text = (message || '').toLowerCase().trim();
 
   if (!text) {
@@ -108,6 +108,27 @@ export async function getBotReply({ message, products, user, api, pricing }) {
 
   if (/\b(thanks|thank you|thx|great|nice|awesome)\b/.test(text)) {
     return { text: 'Happy to help! 😊 Anything else?', chips: ["Today's deals", 'Shipping info'] };
+  }
+
+  // Questions about the currently viewed product
+  if (
+    currentProduct &&
+    /\b(this|that|it\b|its|current)\b|about (this|the) (product|item)|tell me about/.test(text) &&
+    !/(deal|discount|offer|sale|track)/.test(text)
+  ) {
+    const p = currentProduct;
+    const price = Number(p.price);
+    const mrp = Number(p.mrp || price);
+    const off = discountPercent(price, mrp);
+    const stock = Number(p.stock ?? 0);
+    const stockLine = stock > 0
+      ? `✅ In stock${stock <= 2 ? ' — only a couple left!' : ''}`
+      : '❌ Currently out of stock.';
+    return {
+      text: `"${p.name}" — ₹${price.toLocaleString('en-IN')}${off ? ` (${off}% off)` : ''}.\n${stockLine}\n\n${(p.description || '').slice(0, 150)}${(p.description || '').length > 150 ? '…' : ''}`,
+      products: formatProducts([p]),
+      chips: ['Return policy', 'Shipping info']
+    };
   }
 
   // Order tracking
