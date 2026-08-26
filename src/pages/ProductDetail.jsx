@@ -173,6 +173,48 @@ export function ProductDetail() {
               </button>
             </div>
 
+            <div className="pd-services">
+              <div className="pd-service">
+                <span className="pd-service-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                    <path d="M12 7v5l4 2" />
+                  </svg>
+                </span>
+                <span className="pd-service-text">
+                  <strong>30 Days</strong>
+                  Return &amp; Replacement
+                </span>
+              </div>
+              <div className="pd-service">
+                <span className="pd-service-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10 17h4V5H2v12h3" />
+                    <path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1" />
+                    <circle cx="7.5" cy="17.5" r="2.5" />
+                    <circle cx="17.5" cy="17.5" r="2.5" />
+                  </svg>
+                </span>
+                <span className="pd-service-text">
+                  <strong>Free Delivery</strong>
+                  on orders over {formatCurrency(pricing.freeShippingThreshold)}
+                </span>
+              </div>
+              <div className="pd-service">
+                <span className="pd-service-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                  </svg>
+                </span>
+                <span className="pd-service-text">
+                  <strong>Cash on Delivery</strong>
+                  or pay online securely
+                </span>
+              </div>
+            </div>
+
             <div className="pd-highlights">
               <h3>Highlights</h3>
               <ul>
